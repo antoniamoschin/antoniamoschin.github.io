@@ -6,12 +6,12 @@ body {
 header {
     text-align: center;
     background-image: url("images/header.jpg");
-    background-position: 0 55%;
+    background-position: 0 58%;
 }
 
 header h2{
     font-size: 4em;
-    color: white;
+    color: black;
     margin: 0;
     padding: 1em 0 1em 0;
 }
@@ -34,4 +34,21 @@ header h4 {
 }
 .author a {
     color: grey;
+}
+
+main{
+    width: 70%; 
+    margin: auto;
+}
+main figure {
+    margin-left: 0;
+}
+main figcaption{
+    float: left; 
+    margin-left: -12em;
+    width: 11.5em; 
+}
+main figure img {
+    width: 90%; 
+    
 }
