@@ -65,3 +65,13 @@ main figure img {
 .next{
     float: right;
 }
+footer{
+    padding: 1em 0 3em 0;
+}
+@media only screen and (max-width: 1200px) {
+    main figure figcaption {
+        float: none; 
+        margin-left: 0;
+        width: auto;
+    }
+}
