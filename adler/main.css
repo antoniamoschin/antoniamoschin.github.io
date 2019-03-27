@@ -6,22 +6,24 @@ body {
 
 header {
     text-align: center;
-    background-image: url("images/Langkampfen.jpg");
-    background-position: 0 58%;
+    background-image: url("images/kufstein.jpg");
+    background-position: 0% 50%;
 }
 
 header h2{
-    font-size: 4em;
-    color: black;
+    font-size: 3em;
+    color:black;
     margin: 0;
     padding: 1em 0 1em 0;
 }
 header h3 {
     font-size: 2em;
     margin: 0;
+    color:white;
 }
 header h4 {
     font-size: 0.75em
+    color: white;
 }
 
 .author{
