@@ -8,3 +8,8 @@ console.log(numOfSlices);
 let changeMe = true;
 changeMe = false;
 console.log(changeMe)
+
+//Aufgabe 4/10
+const entree= 'Enchiladas';
+console.log (entree);
+entree = 'Tacos'
