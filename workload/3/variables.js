@@ -31,3 +31,7 @@ let gainedDollar = 3;
 gainedDollar++;
 let lostDollar = 50;
 lostDollar--;
+
+// Aufgabe 7/10
+var favoriteAnimal='Sloth'
+console.log('My favorite animal'+':'+ favoriteAnimal)
