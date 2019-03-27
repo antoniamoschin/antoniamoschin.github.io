@@ -25,3 +25,9 @@ let quarterMe = 1152;
 quarterMe /= 4;
 
 // Use the mathematical assignments in the space below:
+
+//6/10
+let gainedDollar = 3;
+gainedDollar++;
+let lostDollar = 50;
+lostDollar--;
