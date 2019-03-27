@@ -43,6 +43,9 @@ main{
     width: 70%; 
     margin: auto;
 }
+main h1 {
+text-align: center;
+}
 main figure {
     margin-left: 0;
 }
