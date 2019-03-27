@@ -35,3 +35,8 @@ lostDollar--;
 // Aufgabe 7/10
 var favoriteAnimal='Sloth'
 console.log('My favorite animal'+':'+ favoriteAnimal)
+
+//Aufgabe 8/10
+var myName='Antonia'
+var myCity= 'Seattle'
+console.log(`My name is ${myName}. My favorite city is ${myCity}.`)
