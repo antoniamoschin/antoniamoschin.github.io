@@ -20,6 +20,10 @@ karte.setView(
     8
 );
 
+
+//Fullscreen  
+karte.addControl(new L.Control.Fullscreen());
+
 const kartenLayer = {
     osm: L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         subdomains: ["a", "b", "c"],
@@ -85,6 +89,8 @@ L.control.layers({
     "Watercolor": kartenLayer.stamen_watercolor, 
 
 }).addTo(karte); 
+
+
 
 //kartenLayer.osm.addTo(karte);
 //kartenLayer.geolandbasemap.addTo(karte); 
