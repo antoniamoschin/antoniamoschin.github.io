@@ -21,7 +21,10 @@ karte.setView(
 );
 
 //openstreetmap einbauen - s=server, z= zoom, x=laenge, y=breite
-L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png").addTo(karte);
+L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    subdomains: ["a", "b", "c"], 
+    attribution: `Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>`
+}).addTo(karte);
 
 //Positionmaker 1 setzen
 let pin1 = L.marker(
