@@ -20,7 +20,6 @@ karte.setView(
     8
 );
 
-
 //Fullscreen  
 karte.addControl(new L.Control.Fullscreen());
 
