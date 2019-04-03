@@ -14,20 +14,7 @@ const titel2 = div.getAttribute("data-title2");
 let karte = L.map("map");
 //console.log(karte);
 
-//auf Ausschnitt zoomen
-karte.setView(
-    [47.2, 11.2],
-    8
-);
-
-//Fullscreen  
-karte.addControl(new L.Control.Fullscreen());
-
-//position karte speichern
-var hash = new L.Hash(karte);
-
-var coords = new L.Control.Coordinates(); 
-coords.addTo(karte); 
+let blickeGruppe = L.featureGroup().addTo(karte);
 
 const kartenLayer = {
     osm: L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -124,10 +111,27 @@ for (let blick of ADLERBLICKE) {
     console.log(blick);
     let blickpin = L.marker(
         [blick.lat, blick.lng]
-    ).addTo(karte);
+    ).addTo(blickeGruppe);
     blickpin.bindPopup(
         `<h1>Standort ${blick.standort}</h1>
         <p>Höhe: ${blick.seehoehe}</p>
         <em> Kunde: ${blick.kunde}</em>`
     )
 }
+
+//auf Ausschnitt zoomen
+karte.fitBounds(blickeGruppe.getBounds()); 
+
+
+//Fullscreen  
+karte.addControl(new L.Control.Fullscreen());
+
+
+//Mit Mausklick koordinaten anzeigen
+var coords = new L.Control.Coordinates(); 
+coords.addTo(karte); 
+karte.on('click', function(e) {
+	coords.setCoordinates(e);
+});
+//position karte speichern
+var hash = new L.Hash(karte);
