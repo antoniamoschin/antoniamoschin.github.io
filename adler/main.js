@@ -20,44 +20,46 @@ karte.setView(
     8
 );
 
-//openstreetmap einbauen - s=server, z= zoom, x=laenge, y=breite
-/*L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-    subdomains: ["a", "b", "c"], 
-    attribution: `Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>`
-}).addTo(karte);*/
+const kartenLayer = {
+        osm: L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
+            subdomains: ["maps", "maps1", "maps2", "maps3", "maps4"],
+            attribution: 'Datenquelle: <a href="https://www.basemap.at"> basemap.at</a>'
+        }), 
+        geolandbasemap: L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
+            subdomains: ["maps", "maps1", "maps2", "maps3", "maps4"],
+            attribution: 'Datenquelle: <a href="https://www.basemap.at"> basemap.at</a>'
+    })
+}; 
 
-L.tilelayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
-    subdomains: ["maps", "maps1", "maps2", "maps3", "maps4"], 
-    attribution: 'Datenquelle: <a href="https://ww.basemap.at"> basemap.at>/a>'
-}).addTo(karte); 
-
-
-
-//Positionmaker 1 setzen
-let pin1 = L.marker(
-    [breite1, laenge1]
-).addTo(karte);
-
-//Popup zum Pin hängen
-pin1.bindPopup(title1).openPopup();
-
-//Positionmaker 2 setzen
-let pin2 = L.marker(
-    [breite2, laenge2]
-).addTo(karte);
-
-//Popup zum Pin hängen
-pin2.bindPopup(titel2).openPopup();
+    //kartenlayer.osm.addTo(karte)
+    kartenLayer.geolandbasemap.addTo(karte); 
 
 
-for (let blick of ADLERBLICKE) {
-    console.log(blick);
-    let blickpin = L.marker(
-        [blick.lat, blick.lng]
-    ).addTo(karte);
-    blickpin.bindPopup(
-        `<h1>Standort ${blick.standort}</h1>
+        //Positionmaker 1 setzen
+        let pin1 = L.marker(
+            [breite1, laenge1]
+        ).addTo(karte);
+
+        //Popup zum Pin hängen
+        pin1.bindPopup(title1).openPopup();
+
+        //Positionmaker 2 setzen
+        let pin2 = L.marker(
+            [breite2, laenge2]
+        ).addTo(karte);
+
+        //Popup zum Pin hängen
+        pin2.bindPopup(titel2).openPopup();
+
+
+        for (let blick of ADLERBLICKE) {
+            console.log(blick);
+            let blickpin = L.marker(
+                [blick.lat, blick.lng]
+            ).addTo(karte);
+            blickpin.bindPopup(
+                `<h1>Standort ${blick.standort}</h1>
         <p>Höhe: ${blick.seehoehe}</p>
         <em> Kunde: ${blick.kunde}</em>`
-    )
-}
+            )
+        }
