@@ -23,6 +23,9 @@ karte.setView(
 //Fullscreen  
 karte.addControl(new L.Control.Fullscreen());
 
+//position karte speichern
+var hash = new L.Hash(karte);
+
 const kartenLayer = {
     osm: L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         subdomains: ["a", "b", "c"],
