@@ -15,6 +15,7 @@ let karte = L.map("map");
 //console.log(karte);
 
 let blickeGruppe = L.featureGroup().addTo(karte);
+//bereitstellen
 
 const kartenLayer = {
     osm: L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -65,7 +66,7 @@ const kartenLayer = {
     };
 
 
-kartenLayer.geolandbasemap.addTo(karte);
+kartenLayer.geolandbasemap.addTo(karte); //default hintergrund
 
 //Auswahlmenü hinzuügen: 
 L.control.layers({
@@ -128,10 +129,10 @@ karte.addControl(new L.Control.Fullscreen());
 
 
 //Mit Mausklick koordinaten anzeigen
-var coords = new L.Control.Coordinates(); 
+let coords = new L.Control.Coordinates(); 
 coords.addTo(karte); 
 karte.on('click', function(e) {
 	coords.setCoordinates(e);
 });
 //position karte speichern
-var hash = new L.Hash(karte);
+let hash = new L.Hash(karte);
