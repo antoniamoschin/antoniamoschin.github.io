@@ -67,4 +67,5 @@ let pin = L.marker (
 //Popup zum Pin hängen
 pin.bindPopup(titel).openPopup();
 
-
+//position karte speichern
+let hash = new L.Hash(karte);
