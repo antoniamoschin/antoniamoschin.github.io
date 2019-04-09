@@ -34,6 +34,7 @@ stamen_watercolor: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/waterc
 }),
 };
 
+//Auswahlmenü hinzufügen
 L.control.layers({
     "Toner": kartenLayer.stamen_toner, 
     "Terrain": kartenLayer.stamen_terrain, 
@@ -41,6 +42,8 @@ L.control.layers({
 
 }).addTo(map); 
 
+//Fullscreen  
+karte.addControl(new L.Control.Fullscreen());
 
 //Positionmaker setzen
 let pin = L.marker (
