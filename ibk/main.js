@@ -82,16 +82,17 @@ karte.locate({
     maxZoom: 18,
 });
 
-//Browserzugriff Location mit Marker anzeigen, Kreis um Marker legen, der anzeigt wo man sich in etwa befindet
+//Browserzugriff Location anzeigen, Marker dort hinzufügen. Kreis um Marker legen, der anzeigt wo man sich in etwa befindet
 karte.on("locationfound", function (event) {
     console.log(event);
     L.marker([
         event.latitude, event.longitude
     ]).addTo(karte);
+    //Kreis um Marker legen mit der Genauigkeit des Markers
     L.circle([
         event.latitude,
         event.longitude
-    ], {
-        radius: 300
-    }).addTo(karte);
+    ], 
+        {radius: event.accuracy/2}
+    ).addTo(karte);
 })
