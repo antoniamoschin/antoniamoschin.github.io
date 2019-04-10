@@ -88,7 +88,7 @@ for(let staette of SPORTSTAETTEN){
     console.log(staette);
     let positionsMarker = L.marker([staette.lat, staette.lng]).addTo(karte); 
     positionsMarker.bindPopup(
-        `<h1> Name: ${staette.name}</h1>
+        `<h3> Name: ${staette.name}</h3>
         <p>Typ: ${staette.typ}</p>
         <p>Adresse: ${staette.adresse}</p>
         `)
