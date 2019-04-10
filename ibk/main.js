@@ -1,15 +1,16 @@
 //Skript für Innsbruck
 
-const div = document.getElementById ("map");
-const breite = div.getAttribute ("data-lat");
+const div = document.getElementById("map");
+const breite = div.getAttribute("data-lat");
 const laenge = div.getAttribute("data-lng");
-const titel = div.getAttribute ("data-title");
+const titel = div.getAttribute("data-title");
 
 
 //Karte initialisieren
 let karte = L.map("map");
 //console.log(karte);
 
+//Kartenlayer hinzufügen
 const kartenLayer = {
     osm: L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         subdomains: ["a", "b", "c"],
@@ -45,20 +46,52 @@ const kartenLayer = {
         attribution: 'Datenquelle: <a href="https://www.basemap.at"> basemap.at</a>'
     }),
     stamen_toner: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", {
-        subdomains: ["a", "b", "c"] , 
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', 
+        subdomains: ["a", "b", "c"],
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     }),
     stamen_terrain: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg", {
-        subdomains:  ["a", "b", "c"] , 
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', 
+        subdomains: ["a", "b", "c"],
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     }),
     stamen_watercolor: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg", {
-        subdomains:  ["a", "b", "c"] , 
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', 
+        subdomains: ["a", "b", "c"],
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     }),
-    };
+};
 
-    kartenLayer.geolandbasemap.addTo(karte);
+kartenLayer.geolandbasemap.addTo(karte);
 
-    //Fullscreen  
-    karte.addControl(new L.Control.Fullscreen());
+//Auswahlmenü hinzuügen: 
+L.control.layers({
+    "Geoland Basemap": kartenLayer.geolandbasemap,
+    "Geoland Basemap Grau": kartenLayer.bmapgrau,
+    "OpenStreetMap": kartenLayer.osm,
+    "Geoland Basemap Overlay": kartenLayer.bmapoverlay,
+    "Geoland Basemap High DPI": kartenLayer.bmaphidpi,
+    "Geoland Basemap Orthofoto": kartenLayer.bbmaporthofoto30cm,
+    "Geoland Basemap Gelände": kartenLayer.bmapoberflaeche,
+    "Toner": kartenLayer.stamen_toner,
+    "Terrain": kartenLayer.stamen_terrain,
+    "Watercolor": kartenLayer.stamen_watercolor,
+
+}).addTo(karte);
+
+// Ausschnitt festlegen (aus Leaflet Doc) 
+karte.locate({
+    setView: true,
+    maxZoom: 18,
+});
+
+//Browserzugriff Location mit Marker anzeigen, Kreis um Marker legen, der anzeigt wo man sich in etwa befindet
+karte.on("locationfound", function (event) {
+    console.log(event);
+    L.marker([
+        event.latitude, event.longitude
+    ]).addTo(karte);
+    L.circle([
+        event.latitude,
+        event.longitude
+    ], {
+        radius: 300
+    }).addTo(karte);
+})
