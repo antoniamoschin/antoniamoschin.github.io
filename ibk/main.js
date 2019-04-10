@@ -76,34 +76,20 @@ L.control.layers({
 
 }).addTo(karte);
 
-// Ausschnitt festlegen (aus Leaflet Doc) 
-karte.locate({
-    setView: true,
-    maxZoom: 18,
-    //Marker geht bei Bewegung mit (alle 10 Sekunden neue Standortbestimmung)
-    //watch : true
-});
+// Wikipedia Koordinaten einfügen
+karte.setView( 
+    [47.2672222, 11.392778],15
+);
 
-let positionsMarker= L.marker ([47,11]).addTo (karte);
+//console.log(SPORTSTAETTEN); 
 
-//Browserzugriff Location anzeigen, Marker dort hinzufügen. Kreis um Marker legen, der anzeigt wo man sich in etwa befindet
-karte.on("locationfound", function (event) {
-    console.log(event);
-    //Positionsmarker setzen und auf neues Attribut positionsMarker zugreifen
-    positionsMarker.setLatLng(event.latlng)
-    //L.marker([
-    //    event.latitude, event.longitude])
-    .addTo(karte);
-    //Kreis um Marker legen mit der Genauigkeit des Markers
-    L.circle([
-        event.latitude,
-        event.longitude
-    ], 
-        {radius: event.accuracy/2}
-    ).addTo(karte);
-})
-
-//Fehlermeldung anzeigen, wenn man Standortfunktion nicht aktiviert hat
-karte.on ("locationerror", function(event) {
-    alert ("Leider keinen Standort gefunden")
-}); 
+//Schleife einbauen 
+for(let staette of SPORTSTAETTEN){
+    console.log(staette);
+    let positionsMarker = L.marker([staette.lat, staette.lng]).addTo(karte); 
+    positionsMarker.bindPopup(
+        `<h1> Name: ${staette.name}</h1>
+        <p>Typ: ${staette.typ}</p>
+        <p>Adresse: ${staette.adresse}</p>
+        `)
+}
