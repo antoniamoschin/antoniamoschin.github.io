@@ -77,19 +77,29 @@ L.control.layers({
 }).addTo(karte);
 
 // Wikipedia Koordinaten einfügen
-karte.setView( 
-    [47.2672222, 11.392778],15
+karte.setView(
+    [47.2672222, 11.392778], 15
 );
 
 //console.log(SPORTSTAETTEN); 
 
 //Schleife einbauen 
-for(let staette of SPORTSTAETTEN){
-    console.log(staette);
-    let positionsMarker = L.marker([staette.lat, staette.lng]).addTo(karte); 
+for (let staette of SPORTSTAETTEN) {
+    //console.log(staette);
+    //Piktogramm definieren
+    let piktogramm = L.icon({
+        iconUrl : `icons/icon_${staette.icon}_schwarz_auf_weiss_250px.png`
+    })
+    //Marker zeichnen
+    let positionsMarker = L.marker([staette.lat, staette.lng], {
+        icon: piktogramm
+    }).addTo(karte);
+
+    //Popup hinzufügen
     positionsMarker.bindPopup(
         `<h3> Name: ${staette.name}</h3>
         <p>Typ: ${staette.typ}</p>
         <p>Adresse: ${staette.adresse}</p>
         `)
 }
+/
