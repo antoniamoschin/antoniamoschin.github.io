@@ -80,14 +80,20 @@ L.control.layers({
 karte.locate({
     setView: true,
     maxZoom: 18,
+    //Marker geht bei Bewegung mit (alle 5 Sekunden neue Standortbestimmung)
+    watch : true
 });
+
+let positionsMarker= L.marker ([47,11]).addTo (karte);
 
 //Browserzugriff Location anzeigen, Marker dort hinzufügen. Kreis um Marker legen, der anzeigt wo man sich in etwa befindet
 karte.on("locationfound", function (event) {
     console.log(event);
-    L.marker([
-        event.latitude, event.longitude
-    ]).addTo(karte);
+    //Positionsmarker setzen und auf neues Attribut positionsMarker zugreifen
+    positionsMarker.setLatLng(event.latlng)
+    //L.marker([
+    //    event.latitude, event.longitude])
+    .addTo(karte);
     //Kreis um Marker legen mit der Genauigkeit des Markers
     L.circle([
         event.latitude,
@@ -96,3 +102,8 @@ karte.on("locationfound", function (event) {
         {radius: event.accuracy/2}
     ).addTo(karte);
 })
+
+//Fehlermeldung anzeigen, wenn man Standortfunktion nicht aktiviert hat
+karte.on ("locationerror", function(event) {
+    alert ("Leider keinen Standort gefunden")
+}); 
