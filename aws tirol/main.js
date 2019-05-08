@@ -118,7 +118,41 @@ async function loadStations() {
         }
     }).addTo(windLayer);
     layerControl.addOverlay(windLayer, "Windrichtung"); 
-    windLayer.addTo(karte); 
+    // windLayer.addTo(karte); 
 
+      //Temperaturlayer hinzufügen
+      const temperaturLayer = L.featureGroup(); 
+      const farbPalette = [
+        [0, "blue"], 
+        [1, "orange"], 
+        [2, "red"]
+
+      ];
+      L.geoJson(stations, {
+          pointToLayer: function (feature, latlng) {
+              if (feature.properties.LT) {
+                 let color = 'red'; 
+                for (let i=0; i<farbPalette.length; i++){
+                      console.log(farbPalette[i], feature.properties.LT); 
+                      if (feature.properties.LT < farbPalette[i][0]){
+                        color = farbPalette [i][1];
+                        break; 
+                      }
+                  }
+                  //let color = 'blue';
+                  //if (feature.properties.LT > 0) {
+                  //    color = 'red'; 
+                  //}
+                  return L.marker(latlng, {
+                      icon: L.divIcon({
+                          html: `<div class="temperaturLabel"style="background-color:${color}"> ${feature.properties.LT}</div>`
+                      })
+                  });
+              }
+          }
+      }).addTo(temperaturLayer);
+      layerControl.addOverlay(temperaturLayer, "Temperatur"); 
+      temperaturLayer.addTo(karte); 
+  
 }
 loadStations();
