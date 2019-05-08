@@ -94,19 +94,31 @@ async function loadStations() {
             <footer>Land Tirol - <a href="https://data.tirol.gv.at"> data.tirol.gv.at </a> </footer>`;
         })
         .addTo(awsTirol);
-    awsTirol.addTo(karte);
+    // awsTirol.addTo(karte); damit nur die Windrichtung am Anfang angezeigt wird
+
+  
     karte.fitBounds(awsTirol.getBounds());
     layerControl.addOverlay(awsTirol, "Wetterstattionen Tirol");
+
+     //Windrichtung anzeigen lassen 
+    const windLayer = L.featureGroup(); 
     L.geoJson(stations, {
         pointToLayer: function (feature, latlng) {
-            if (feature.properties.WR){
-                    return L.marker(latlng, {
-                        icon: L.divIcon({
-                            html: '<i class="fas fa-arrow-circle-up"></i>'
-                        })
-                    });
+            if (feature.properties.WR) {
+                let color = 'black';
+                if (feature.properties.WG > 20) {
+                    color = 'red'; 
                 }
+                return L.marker(latlng, {
+                    icon: L.divIcon({
+                        html: `<i style="color:${color}; transform: rotate(${feature.properties.WR}deg)" class="fas fa-arrow-circle-up fa-3x"></i>`
+                    })
+                });
             }
-            }).addTo(karte);
+        }
+    }).addTo(windLayer);
+    layerControl.addOverlay(windLayer, "Windrichtung"); 
+    windLayer.addTo(karte); 
+
 }
 loadStations();
