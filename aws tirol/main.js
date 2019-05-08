@@ -54,7 +54,7 @@ const kartenLayer = {
 kartenLayer.geolandbasemap.addTo(karte);
 
 //Auswahlmenü hinzuügen: 
-L.control.layers({
+const layerControl = L.control.layers({
     "Geoland Basemap": kartenLayer.geolandbasemap,
     "Geoland Basemap Grau": kartenLayer.bmapgrau,
     "OpenStreetMap": kartenLayer.osm,
@@ -82,11 +82,31 @@ async function loadStations() {
     L.geoJson(stations)
         .bindPopup(function (layer) {
             console.log("Layer:", layer);
-            return `Temperatur: ${layer.feature.properties.LT}°C <br>
-        Datum${layer.feature.properties.date} `;
+            const date = new Date(layer.feature.properties.date);
+            return `<h4>${layer.feature.properties.name}</h4>
+            Höhe(m):${layer.feature.geometry.coordinates[2]}<br>
+            Temperatur: ${layer.feature.properties.LT}°C <br>
+            Datum: ${date.toLocaleDateString("de-AT")} 
+            ${date.toLocaleTimeString("de-AT")} <br>
+            Windgeschwindigkeit (km/h): 
+            ${layer.feature.properties.WG ? layer.feature.properties.WG: 'keine Daten'}
+            <hr>
+            <footer>Land Tirol - <a href="https://data.tirol.gv.at"> data.tirol.gv.at </a> </footer>`;
         })
         .addTo(awsTirol);
     awsTirol.addTo(karte);
     karte.fitBounds(awsTirol.getBounds());
+    layerControl.addOverlay(awsTirol, "Wetterstattionen Tirol");
+    L.geoJson(stations, {
+        pointToLayer: function (feature, latlng) {
+            if (feature.properties.WR){
+                    return L.marker(latlng, {
+                        icon: L.divIcon({
+                            html: '<i class="fas fa-arrow-circle-up"></i>'
+                        })
+                    });
+                }
+            }
+            }).addTo(karte);
 }
 loadStations();
