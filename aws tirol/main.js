@@ -97,18 +97,18 @@ async function loadStations() {
         .addTo(awsTirol);
     // awsTirol.addTo(karte); damit nur die Windrichtung am Anfang angezeigt wird
 
-  
+
     karte.fitBounds(awsTirol.getBounds());
     layerControl.addOverlay(awsTirol, "Wetterstattionen Tirol");
 
-     //Windrichtung anzeigen lassen 
-    const windLayer = L.featureGroup(); 
+    //Windrichtung anzeigen lassen 
+    const windLayer = L.featureGroup();
     L.geoJson(stations, {
         pointToLayer: function (feature, latlng) {
             if (feature.properties.WR) {
                 let color = 'black';
                 if (feature.properties.WG > 20) {
-                    color = 'red'; 
+                    color = 'red';
                 }
                 return L.marker(latlng, {
                     icon: L.divIcon({
@@ -118,59 +118,59 @@ async function loadStations() {
             }
         }
     }).addTo(windLayer);
-    layerControl.addOverlay(windLayer, "Windrichtung"); 
+    layerControl.addOverlay(windLayer, "Windrichtung");
     // windLayer.addTo(karte); 
 
-     //Relative Feuchte anzeigen lassen 
-     const relFeuchte = L.featureGroup(); 
-     L.geoJson(stations, {
-         pointToLayer: function (feature, latlng) {
-             if (feature.properties.RH) {
-                 let color = 'black';
-                 return L.marker(latlng, {
-                     icon: L.divIcon({
-                         html: `<i style="color:${color}percent)" class="fas fa-arrow-circle-up fa-3x"></i>`
-                     })
-                 });
-             }
-         }
-     }).addTo(relFeuchte);
-     layerControl.addOverlay(relFeuchte, "Relative Feuchte"); 
-     // relFeuchte.addTo(karte);  --> wenn das als erste Karte angezeigt werden soll
+    //Relative Feuchte anzeigen lassen 
+    const relFeuchte = L.featureGroup();
+    L.geoJson(stations, {
+        pointToLayer: function (feature, latlng) {
+            if (feature.properties.RH) {
+                let color = 'black';
+                return L.marker(latlng, {
+                    icon: L.divIcon({
+                        html: `<div class="temperaturLabel"style="background-color:${color}"> ${feature.properties.LT}</div>`
+                    })
+                });
+            }
+        }
+    }).addTo(relFeuchte);
+    layerControl.addOverlay(relFeuchte, "Relative Feuchte");
+    // relFeuchte.addTo(karte);  --> wenn das als erste Karte angezeigt werden soll
 
-      //Temperaturlayer hinzufügen
-      const temperaturLayer = L.featureGroup(); 
-      const farbPalette = [
-        [0, "blue"], 
-        [1, "orange"], 
+    //Temperaturlayer hinzufügen
+    const temperaturLayer = L.featureGroup();
+    const farbPalette = [
+        [0, "blue"],
+        [1, "orange"],
         [2, "red"]
 
-      ];
-      L.geoJson(stations, {
-          pointToLayer: function (feature, latlng) {
-              if (feature.properties.LT) {
-                 let color = 'red'; 
-                for (let i=0; i<farbPalette.length; i++){
-                      console.log(farbPalette[i], feature.properties.LT); 
-                      if (feature.properties.LT < farbPalette[i][0]){
-                        color = farbPalette [i][1];
-                        break; 
-                      }
-                  }
-                  //let color = 'blue';
-                  //if (feature.properties.LT > 0) {
-                  //    color = 'red'; 
-                  //}
-                  return L.marker(latlng, {
-                      icon: L.divIcon({
-                          html: `<div class="temperaturLabel"style="background-color:${color}"> ${feature.properties.LT}</div>`
-                      })
-                  });
-              }
-          }
-      }).addTo(temperaturLayer);
-      layerControl.addOverlay(temperaturLayer, "Temperatur"); 
-      temperaturLayer.addTo(karte); 
-  
+    ];
+    L.geoJson(stations, {
+        pointToLayer: function (feature, latlng) {
+            if (feature.properties.LT) {
+                let color = 'red';
+                for (let i = 0; i < farbPalette.length; i++) {
+                    console.log(farbPalette[i], feature.properties.LT);
+                    if (feature.properties.LT < farbPalette[i][0]) {
+                        color = farbPalette[i][1];
+                        break;
+                    }
+                }
+                //let color = 'blue';
+                //if (feature.properties.LT > 0) {
+                //    color = 'red'; 
+                //}
+                return L.marker(latlng, {
+                    icon: L.divIcon({
+                        html: `<div class="temperaturLabel"style="background-color:${color}"> ${feature.properties.LT}</div>`
+                    })
+                });
+            }
+        }
+    }).addTo(temperaturLayer);
+    layerControl.addOverlay(temperaturLayer, "Temperatur");
+    temperaturLayer.addTo(karte);
+
 }
 loadStations();
