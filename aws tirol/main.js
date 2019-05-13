@@ -101,8 +101,22 @@ async function loadStations() {
     karte.fitBounds(awsTirol.getBounds());
     layerControl.addOverlay(awsTirol, "Wetterstattionen Tirol");
 
-    //Windrichtung anzeigen lassen 
+    //Windrichtung Windgeschwindigkeit anzeigen lassen 
     const windLayer = L.featureGroup();
+    const windgeschwindigkeitLayer = L.featureGroup();
+
+    const farbPaletteWind = [
+        [11, "#00b900"],
+        [28, "#10cd24"],
+        [38, "#72d475"],
+        [49, "#fed6d3"],
+        [61, "#ffb6b3"],
+        [74, "#ff9e9a"],
+        [88, "#ff8281"],
+        [102, "#ff6160"],
+        [117, "#ff453c"],
+    ];
+    // Windrichtung 
     L.geoJson(stations, {
         pointToLayer: function (feature, latlng) {
             if (feature.properties.WR) {
@@ -121,34 +135,59 @@ async function loadStations() {
     layerControl.addOverlay(windLayer, "Windrichtung");
     // windLayer.addTo(karte); 
 
+    //Windgeschwindigkeit
+    L.geoJson(stations, {
+        pointToLayer: function (feature, latlng) {
+            if (feature.properties.WG) {
+                let color = 'blue';
+                for (let i = 0; i < farbPaletteWind.length; i++) {
+                    console.log(farbPaletteWind[i], feature.properties.WG);
+                    if (feature.properties.WG < farbPaletteWind[i][0]) {
+                        color = farbPaletteWind[i][1];
+                        break;
+                    }
+                }
+                
+                return L.marker(latlng, {
+                    icon: L.divIcon({
+                        html: `<div class="windgeschwindigkeitLabel"style="background-color:${color}"> ${feature.properties.WG}</div>`
+                    })
+                });
+            }
+        }
+    }).addTo(windgeschwindigkeitLayer);
+    layerControl.addOverlay(windgeschwindigkeitLayer, "Windgeschwindigkeit");
+    windgeschwindigkeitLayer.addTo(karte);
+
+
     //Relative Feuchte anzeigen lassen 
     const relFeuchte = L.featureGroup();
     const farbPaletteFeuchte = [
-        [20,"rgb(238, 238, 238)"],
-        [30,"rgb(221, 221, 221)"],
-        [40,"rgb(198, 201, 206)"],
-        [50,"rgb(187, 187, 187)"],
-        [60,"rgb(170, 170, 204)"],
-        [70,"rgb(153, 152, 221)"],
-        [80,"rgb(135, 136, 238)"],
-        [90,"rgb(118, 119, 225)"],
-    ]; 
-    
-    
+        [20, "rgb(238, 238, 238)"],
+        [30, "rgb(221, 221, 221)"],
+        [40, "rgb(198, 201, 206)"],
+        [50, "rgb(187, 187, 187)"],
+        [60, "rgb(170, 170, 204)"],
+        [70, "rgb(153, 152, 221)"],
+        [80, "rgb(135, 136, 238)"],
+        [90, "rgb(118, 119, 225)"],
+    ];
+
+
     L.geoJson(stations, {
         pointToLayer: function (feature, latlng) {
             if (feature.properties.RH) {
-                let color = 'black';
-                for(let i=0; i<farbPaletteFeuchte.length; i++){
+                let color = 'blue';
+                for (let i = 0; i < farbPaletteFeuchte.length; i++) {
                     console.log(farbPaletteFeuchte[i], feature.properties.RH);
-                    if (feature.properties.RH < farbPaletteFeuchte[i][0]){
+                    if (feature.properties.RH < farbPaletteFeuchte[i][0]) {
                         color = farbPaletteFeuchte[i][1];
                         break;
                     }
                 }
                 return L.marker(latlng, {
                     icon: L.divIcon({
-                        html:  `<div  class="relFeuchteLabel" style="background-color:${color}" >${feature.properties.RH}</div>`
+                        html: `<div  class="relFeuchteLabel" style="background-color:${color}" >${feature.properties.RH}</div>`
                     })
                 });
             }
