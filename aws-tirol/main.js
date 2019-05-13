@@ -75,11 +75,13 @@ karte.setView(
 
 //console.log(AWS); 
 
-//Wetterstationen
+//Wetterstationen live einbinden
 async function loadStations() {
     const response = await fetch("https:\\aws.openweb.cc/stations");
     const stations = await response.json();
     const awsTirol = L.featureGroup();
+
+    //Marker setzen und Popup dazu
     L.geoJson(stations)
         .bindPopup(function (layer) {
             console.log("Layer:", layer);
@@ -261,6 +263,5 @@ async function loadStations() {
     }).addTo(temperaturLayer);
     layerControl.addOverlay(temperaturLayer, "Temperatur");
     temperaturLayer.addTo(karte);
-
 }
 loadStations();
