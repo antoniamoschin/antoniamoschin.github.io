@@ -124,8 +124,14 @@ async function loadStations() {
     //Relative Feuchte anzeigen lassen 
     const relFeuchte = L.featureGroup();
     const farbPaletteFeuchte = [
-        [20, "238, 238, 238"]
-
+        [20,"rgb(238, 238, 238)"],
+        [30,"rgb(221, 221, 221)"],
+        [40,"rgb(198, 201, 206)"],
+        [50,"rgb(187, 187, 187)"],
+        [60,"rgb(170, 170, 204)"],
+        [70,"rgb(153, 152, 221)"],
+        [80,"rgb(135, 136, 238)"],
+        [90,"rgb(118, 119, 225)"],
     ]; 
     
     
@@ -133,9 +139,16 @@ async function loadStations() {
         pointToLayer: function (feature, latlng) {
             if (feature.properties.RH) {
                 let color = 'black';
+                for(let i=0; i<farbPaletteFeuchte.length; i++){
+                    console.log(farbPaletteFeuchte[i], feature.properties.RH);
+                    if (feature.properties.RH < farbPaletteFeuchte[i][0]){
+                        color = farbPaletteFeuchte[i][1];
+                        break;
+                    }
+                }
                 return L.marker(latlng, {
                     icon: L.divIcon({
-                        html: `<div class="relFeuchteLabel"style="background-color:${color}"> ${feature.properties.RH}</div>`
+                        html:  `<div  class="relFeuchteLabel" style="background-color:${color}" >${feature.properties.RH}</div>`
                     })
                 });
             }
