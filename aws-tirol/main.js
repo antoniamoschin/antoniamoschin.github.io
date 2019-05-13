@@ -135,7 +135,7 @@ async function loadStations() {
         }
     }).addTo(windLayer);
     layerControl.addOverlay(windLayer, "Windrichtung");
-    //windLayer.addTo(karte); 
+    windLayer.addTo(karte); 
 
     //Windgeschwindigkeit
     L.geoJson(stations, {
