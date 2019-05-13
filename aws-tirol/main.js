@@ -133,7 +133,7 @@ async function loadStations() {
         }
     }).addTo(windLayer);
     layerControl.addOverlay(windLayer, "Windrichtung");
-    // windLayer.addTo(karte); 
+    //windLayer.addTo(karte); 
 
     //Windgeschwindigkeit
     L.geoJson(stations, {
@@ -194,7 +194,7 @@ async function loadStations() {
         }
     }).addTo(relFeuchte);
     layerControl.addOverlay(relFeuchte, "Relative Feuchte");
-    // relFeuchte.addTo(karte);  --> wenn das als erste Karte angezeigt werden soll
+    relFeuchte.addTo(karte); 
 
     //Temperaturlayer hinzufügen (mit den const kann der Temperaturlayer ein bzw. ausgeschaltet werden)
     const temperaturLayer = L.featureGroup();
