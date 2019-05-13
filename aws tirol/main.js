@@ -75,6 +75,7 @@ karte.setView(
 
 //console.log(AWS); 
 
+//Wetterstationen
 async function loadStations() {
     const response = await fetch("https:\\aws.openweb.cc/stations");
     const stations = await response.json();
@@ -119,6 +120,23 @@ async function loadStations() {
     }).addTo(windLayer);
     layerControl.addOverlay(windLayer, "Windrichtung"); 
     // windLayer.addTo(karte); 
+
+     //Relative Feuchte anzeigen lassen 
+     const relFeuchte = L.featureGroup(); 
+     L.geoJson(stations, {
+         pointToLayer: function (feature, latlng) {
+             if (feature.properties.RH) {
+                 let color = 'black';
+                 return L.marker(latlng, {
+                     icon: L.divIcon({
+                         html: `<i style="color:${color}percent)" class="fas fa-arrow-circle-up fa-3x"></i>`
+                     })
+                 });
+             }
+         }
+     }).addTo(relFeuchte);
+     layerControl.addOverlay(relFeuchte, "Relative Feuchte"); 
+     // relFeuchte.addTo(karte);  --> wenn das als erste Karte angezeigt werden soll
 
       //Temperaturlayer hinzufügen
       const temperaturLayer = L.featureGroup(); 
