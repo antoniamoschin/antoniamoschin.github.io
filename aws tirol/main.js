@@ -123,13 +123,19 @@ async function loadStations() {
 
     //Relative Feuchte anzeigen lassen 
     const relFeuchte = L.featureGroup();
+    const farbPaletteFeuchte = [
+        [20, "238, 238, 238"]
+        
+    ]; 
+    
+    
     L.geoJson(stations, {
         pointToLayer: function (feature, latlng) {
             if (feature.properties.RH) {
                 let color = 'black';
                 return L.marker(latlng, {
                     icon: L.divIcon({
-                        html: `<div class="temperaturLabel"style="background-color:${color}"> ${feature.properties.LT}</div>`
+                        html: `<div class="relFeuchteLabel"style="background-color:${color}"> ${feature.properties.RH}</div>`
                     })
                 });
             }
@@ -141,10 +147,42 @@ async function loadStations() {
     //Temperaturlayer hinzufügen
     const temperaturLayer = L.featureGroup();
     const farbPalette = [
-        [0, "blue"],
-        [1, "orange"],
-        [2, "red"]
-
+        [-30, "#646664"]
+        [-28, "#8c8a8c"]
+        [-26, "#b4b2b4"]
+        [-24, "#cccecc"]
+        [-22, "#e4e6e4"]
+        [-20, "#772d76"]
+        [-18, "#b123b0"]
+        [-16, "#d219d1"]
+        [-14, "#f0f"]
+        [-12, "#ff94ff"]
+        [-10, "#3800d1"]
+        [-8, "#325afe"]
+        [-6, "#2695ff"]
+        [-4, "#00cdff"]
+        [-2, "#00fffe"]
+        [-0, "#007800"]
+        [2, "#009d00"]
+        [4, "#00bc02"]
+        [6, "#00e200"]
+        [8, "#00e200"]
+        [10, "#fcff00"]
+        [12, "#fdf200"]
+        [14, "#fde100"]
+        [16, "#ffd100"]
+        [18, "#ffbd00"]
+        [20, "#ffad00"]
+        [22, "#ff9c00"]
+        [24, "#ff9c00"]
+        [26, "red"]
+        [28, "#f30102"]
+        [30, "#d20000"]
+        [32, "#c10000"]
+        [34, "#c10000"]
+        [36, "#a10000"]
+        [38, "#900000"]
+        [40, "#770100"]
     ];
     L.geoJson(stations, {
         pointToLayer: function (feature, latlng) {

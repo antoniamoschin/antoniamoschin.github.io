@@ -29,7 +29,7 @@ height: 100vh;
 .relFeuchteLabel{
     display: inline; 
     font-size: 1em; 
-    font-weight: italic; 
+    font-weight: 100; 
     padding: 0.3em; 
     border: 1px solid gray;
     text-shadow: 
