@@ -77,7 +77,7 @@ karte.setView(
 
 //Wetterstationen live einbinden
 async function loadStations() {
-    const response = await fetch("https:\\aws.openweb.cc/stations");
+    const response = await fetch("https://aws.openweb.cc/stations");
     const stations = await response.json();
     const awsTirol = L.featureGroup();
 
