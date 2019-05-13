@@ -159,7 +159,7 @@ async function loadStations() {
         }
     }).addTo(windgeschwindigkeitLayer);
     layerControl.addOverlay(windgeschwindigkeitLayer, "Windgeschwindigkeit");
-    windgeschwindigkeitLayer.addTo(karte);
+    //windgeschwindigkeitLayer.addTo(karte);
 
 
     //Relative Feuchte anzeigen lassen 
@@ -196,7 +196,7 @@ async function loadStations() {
         }
     }).addTo(relFeuchte);
     layerControl.addOverlay(relFeuchte, "Relative Feuchte");
-    relFeuchte.addTo(karte); 
+    //relFeuchte.addTo(karte); 
 
     //Temperaturlayer hinzufügen (mit den const kann der Temperaturlayer ein bzw. ausgeschaltet werden)
     const temperaturLayer = L.featureGroup();
@@ -262,6 +262,6 @@ async function loadStations() {
         }
     }).addTo(temperaturLayer);
     layerControl.addOverlay(temperaturLayer, "Temperatur");
-    temperaturLayer.addTo(karte);
+    //temperaturLayer.addTo(karte);
 }
 loadStations();
