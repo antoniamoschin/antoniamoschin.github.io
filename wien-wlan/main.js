@@ -72,7 +72,7 @@ karte.setView([48.208333, 16.373056], 12);
 // die Implementierung der Karte startet hier
 
 //Daten werden von dieser Seite bezogen
-const url = ' https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SPAZIERPUNKTOGD &srsName=EPSG:4326&outputFormat=json'
+const url = 'https://data.wien.gv.at/daten/geo?version=1.1.0&service=WFS&request=GetCapabilities'
 
 //Marker anders gestalten
 function makeMarker(feature, latlng) {
@@ -128,8 +128,8 @@ const massstab = L.control.scale({
 });
 karte.addControl(massstab);
 
-//Spazierwege hinzufügen
-const wege = 'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SPAZIERLINIEOGD &srsName=EPSG:4326&outputFormat=json'
+//Wlan Zeichen hinzufügen
+const wlan = 'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WLANWIENATOGD &srsName=EPSG:4326&outputFormat=json'
 
 //Popup an den Linien anheften
 function linienPopup(feature, layer) {
@@ -141,8 +141,8 @@ function linienPopup(feature, layer) {
 
 async function loadWege(wegeUrl) {
     const response = await fetch(wegeUrl)
-    const wegeData = await response.json();
-    const wegeJson = L.geoJson(wegeData, {
+    const wlanData = await response.json();
+    const wlanJson = L.geoJson(wegeData, {
         //Wegenetz grün färben
         style: function() {
             return {
@@ -152,7 +152,7 @@ async function loadWege(wegeUrl) {
         //Linienpopup
         onEachFeature: linienPopup
     });
-    karte.addLayer(wegeJson);
-    layerControl.addOverlay(wegeJson, "Spazierwege");
+    karte.addLayer(wlanJson);
+    layerControl.addOverlay(wlanJson, "Wlan");
 }
 loadWege(wege);
