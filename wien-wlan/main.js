@@ -72,17 +72,15 @@ karte.setView([48.208333, 16.373056], 12);
 // die Implementierung der Karte startet hier
 
 //Daten werden von dieser Seite bezogen
-const url = 'https://data.wien.gv.at/daten/geo?version=1.1.0&service=WFS&request=GetCapabilities'
+const url = ' https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SPAZIERPUNKTOGD &srsName=EPSG:4326&outputFormat=json'
 
 //Marker anders gestalten
 function makeMarker(feature, latlng) {
     const fotoicon = L.icon(
         {
-            iconUrl: 'http://www.data.wien.gv.at/icons/wlanwienatogd.png',
+            iconUrl: 'http://www.data.wien.gv.at/icons/sehenswuerdigogd.svg',
             iconSize: [16,16]
         });
-        
-
     const sightMarker = L.marker(latlng, {
         icon: fotoicon //Marker ein icon geben sonst normaler blauer Standardmarker
     });
@@ -128,8 +126,8 @@ const massstab = L.control.scale({
 });
 karte.addControl(massstab);
 
-//Wlan Zeichen hinzufügen
-const wlan = 'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WLANWIENATOGD &srsName=EPSG:4326&outputFormat=json'
+//Spazierwege hinzufügen
+const wege = 'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SPAZIERLINIEOGD &srsName=EPSG:4326&outputFormat=json'
 
 //Popup an den Linien anheften
 function linienPopup(feature, layer) {
@@ -141,8 +139,8 @@ function linienPopup(feature, layer) {
 
 async function loadWege(wegeUrl) {
     const response = await fetch(wegeUrl)
-    const wlanData = await response.json();
-    const wlanJson = L.geoJson(wegeData, {
+    const wegeData = await response.json();
+    const wegeJson = L.geoJson(wegeData, {
         //Wegenetz grün färben
         style: function() {
             return {
@@ -152,7 +150,54 @@ async function loadWege(wegeUrl) {
         //Linienpopup
         onEachFeature: linienPopup
     });
-    karte.addLayer(wlanJson);
-    layerControl.addOverlay(wlanJson, "Wlan");
+    karte.addLayer(wegeJson);
+    layerControl.addOverlay(wegeJson, "Spazierwege");
 }
 loadWege(wege);
+
+//Einbauen WLAN
+//Daten werden von dieser Seite bezogen
+const wlan = 'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:WLANWIENATOGD&srsName=EPSG:4326&outputFormat=json'
+
+//Marker anders gestalten
+function makewlan(feature, latlng) {
+    const wlanicon = L.icon(
+        {
+            iconUrl: 'http://www.data.wien.gv.at/icons/wlanwienatogd.png',
+            iconSize: [16,16]
+        });
+        
+
+    const wlanMarker = L.marker(latlng, {
+        icon: wlanicon //Marker ein icon geben sonst normaler blauer Standardmarker
+    });
+
+    //Variable innerhalb der Funktion:
+    wlanMarker.bindPopup(`
+    <h3>${feature.properties.NAME}</h3>
+    <p>${feature.properties.ADRESSE}</p>
+    <hr>
+    <footer><a target=blanc href="${feature.properties.WEITERE_INF}">Weblink</a></footer>
+    `);
+    return wlanMarker;
+}
+
+
+//Funktion asynchoner Prozess, auf Daten warten und dann umwandeln in json + Cluster für Marker bilden (vorher im html eingearbeitet)
+async function loadwlan(wlan) {
+    const wlanClusterGruppe = L.markerClusterGroup();
+    const wlanresponse = await fetch(wlan);
+    const wlanData = await wlanresponse.json();
+    const wlangeoJson = L.geoJson(wlanData, {
+        pointToLayer: makewlan
+    });
+
+    //Clustergruppe 
+    wlanClusterGruppe.addLayer(wlangeoJson);
+    karte.addLayer(wlanClusterGruppe);
+    //Layer zur Kontrollstation oben rechts (ein- und ausschalten) hinzufügen
+    layerControl.addOverlay(wlanClusterGruppe, "WLAN");
+}
+//Laden loadwlan außerhalb der Funktion
+loadwlan(wlan);
+
