@@ -67,6 +67,61 @@ kartenLayer.bmapgrau.addTo(karte);
 
 karte.addControl(new L.Control.Fullscreen());
 
+//Wikipedia Layer
+const wikipediaGruppe = L.featureGroup().addTo(karte);
+layerControl.addOverlay(wikipediaGruppe, "Wikipedia Artikel");
+async function wikipediaArtikelLaden(url) { //Url die in Funktion verwendet wird hat keine Verbidnung mit anderen Urls
+    wikipediaGruppe.clearLayers(); //bestehende Layer löschen damit nur 5 Artikel erscheinen, die gewollt sind 
+
+    console.log("Lade", url);
+    const antwort = await fetch(url);
+    const jsonDaten = await antwort.json();
+
+    console.log(jsonDaten);
+    for (let artikel of jsonDaten.geonames) {
+        const wikipediaMarker = L.marker([artikel.lat, artikel.lng], { //geschwungene Klammer für icon)
+            icon: L.icon({
+                iconUrl: "images/wikipediaArtikelLaden.png",
+                iconSize: [22, 22]
+            })
+        }).addTo(wikipediaGruppe);
+
+        //Marker einfügen
+        wikipediaMarker.bindPopup(`
+    <h3>${artikel.title}</h3>
+     <hr>
+    <p>${artikel.summary}</p>
+    <footer><a target="_blank" href="https://${artikel.wikipediaUrl}">Weblink</a></footer>
+     `);
+    }
+}
+//Geonames immer nur 1x pro Ausschnitt laden
+let letzteGeonamesUrl = null;
+
+//Wikipedia Artikel 
+//http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=44.1&south=-9.9&east=-22.4&west=55.2&username=webmapping&style=full
+
+karte.on("load zoomend moveend", function () { //beim laden, beim zoomen und Ausschnitt verschieben werden 5 Wikipedia Artikel angezeigt
+    console.log("Karte geladen", karte.getBounds()); //getBounds nimmt Ausschnitte die man gerade sieht
+
+    let ausschnitt = {
+        n: karte.getBounds().getNorth(),
+        s: karte.getBounds().getSouth(),
+        o: karte.getBounds().getEast(),
+        w: karte.getBounds().getWest(),
+    }
+    console.log(ausschnitt);
+    const geonamesUrl = `http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=${ausschnitt.n}&south=${ausschnitt.s}&east=${ausschnitt.o}&west=${ausschnitt.w}&username=webmapping&style=full&maxRows=50&lang=de`;
+
+    //console.log(geonamesUrl);
+    if (geonamesUrl != letzteGeonamesUrl) {
+        //Json Artikel laden
+        wikipediaArtikelLaden(geonamesUrl); //Funktion aufrufen und oben laden
+        letzteGeonamesUrl = geonamesUrl;
+
+    }
+
+});
 karte.setView([48.208333, 16.373056], 12);
 
 // die Implementierung der Karte startet hier
@@ -198,49 +253,3 @@ async function loadwlan(wlan) {
 }
 //Laden loadwlan außerhalb der Funktion
 loadwlan(wlan);
-
-
-async function wikipediaArtikelLaden(url) { //Url die in Funktion verwendet wird hat keine Verbidnung mit anderen Urls
-    console.log("Lade", url);
-    const antwort = await fetch(url);
-    const jsonDaten = await antwort.json();
-
-    console.log(jsonDaten);
-    for (let artikel of jsonDaten.geonames) {
-        const wikipediaMarker = L.marker([artikel.lat, artikel.lng], { //geschwungene Klammer für icon)
-            icon: L.icon({
-                iconUrl: "images/wikipediaArtikelLaden.png",
-                iconSize: [22, 22]
-            })
-        }).addTo(karte);
-
-        //Marker einfügen
-        wikipediaMarker.bindPopup(`
-    <h3>${artikel.title}</h3>
-     <hr>
-    <p>${artikel.summary}</p>
-    <footer><a target="_blank" href="https://${artikel.wikipediaUrl}">Weblink</a></footer>
-     `);
-    }
-}
-//Wikipedia Artikel 
-//http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=44.1&south=-9.9&east=-22.4&west=55.2&username=webmapping&style=full
-
-karte.on("click", function () {
-    console.log("Karte geladen", karte.getBounds());
-
-    let ausschnitt = {
-        n: karte.getBounds().getNorth(),
-        s: karte.getBounds().getSouth(),
-        o: karte.getBounds().getEast(),
-        w: karte.getBounds().getWest(),
-    }
-    console.log(ausschnitt);
-    const geonamesUrl = `http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=${ausschnitt.n}&south=${ausschnitt.s}&east=${ausschnitt.o}&west=${ausschnitt.w}&username=webmapping&style=full&maxRows=5`;
-
-    console.log(geonamesUrl);
-
-    //Json Artikel laden
-    wikipediaArtikelLaden(geonamesUrl); //Funktion aufrufen und oben laden
-
-});

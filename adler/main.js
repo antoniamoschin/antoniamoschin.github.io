@@ -52,36 +52,36 @@ const kartenLayer = {
         attribution: 'Datenquelle: <a href="https://www.basemap.at"> basemap.at</a>'
     }),
     stamen_toner: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", {
-        subdomains: ["a", "b", "c"] , 
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', 
+        subdomains: ["a", "b", "c"],
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     }),
     stamen_terrain: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg", {
-        subdomains:  ["a", "b", "c"] , 
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', 
+        subdomains: ["a", "b", "c"],
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     }),
     stamen_watercolor: L.tileLayer("https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg", {
-        subdomains:  ["a", "b", "c"] , 
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', 
+        subdomains: ["a", "b", "c"],
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
     }),
-    };
+};
 
 
 kartenLayer.geolandbasemap.addTo(karte); //default hintergrund
 
 //Auswahlmenü hinzuügen: 
 L.control.layers({
-    "Geoland Basemap": kartenLayer.geolandbasemap, 
-    "Geoland Basemap Grau": kartenLayer.bmapgrau, 
-    "OpenStreetMap" : kartenLayer.osm, 
-    "Geoland Basemap Overlay": kartenLayer.bmapoverlay, 
-    "Geoland Basemap High DPI": kartenLayer.bmaphidpi, 
-    "Geoland Basemap Orthofoto": kartenLayer.bbmaporthofoto30cm, 
-    "Geoland Basemap Gelände": kartenLayer.bmapoberflaeche, 
-    "Toner": kartenLayer.stamen_toner, 
-    "Terrain": kartenLayer.stamen_terrain, 
-    "Watercolor": kartenLayer.stamen_watercolor, 
+    "Geoland Basemap": kartenLayer.geolandbasemap,
+    "Geoland Basemap Grau": kartenLayer.bmapgrau,
+    "OpenStreetMap": kartenLayer.osm,
+    "Geoland Basemap Overlay": kartenLayer.bmapoverlay,
+    "Geoland Basemap High DPI": kartenLayer.bmaphidpi,
+    "Geoland Basemap Orthofoto": kartenLayer.bbmaporthofoto30cm,
+    "Geoland Basemap Gelände": kartenLayer.bmapoberflaeche,
+    "Toner": kartenLayer.stamen_toner,
+    "Terrain": kartenLayer.stamen_terrain,
+    "Watercolor": kartenLayer.stamen_watercolor,
 
-}).addTo(karte); 
+}).addTo(karte);
 
 
 
@@ -121,7 +121,7 @@ for (let blick of ADLERBLICKE) {
 }
 
 //auf Ausschnitt zoomen
-karte.fitBounds(blickeGruppe.getBounds()); 
+karte.fitBounds(blickeGruppe.getBounds());
 
 
 //Fullscreen  
@@ -129,10 +129,33 @@ karte.addControl(new L.Control.Fullscreen());
 
 
 //Mit Mausklick koordinaten anzeigen
-let coords = new L.Control.Coordinates(); 
-coords.addTo(karte); 
-karte.on('click', function(e) {
-	coords.setCoordinates(e);
+let coords = new L.Control.Coordinates();
+coords.addTo(karte);
+karte.on('click', function (e) {
+    coords.setCoordinates(e);
 });
 //position karte speichern
 let hash = new L.Hash(karte);
+
+//GPX track laden
+new L.GPX("AdlerwegEtappe04.gpx", {
+    async: true,
+    marker_options: {
+        startIconUrl: 'images/pin-icon-start.png',
+        endIconUrl: 'images/pin-icon-end.png',
+        shadowUrl: 'images/pin-shadow.png'
+    }
+}).on('loaded', function (e) { //Grenzen werden auf Auschnitt des gesamten Track geladen
+    karte.fitBounds(e.target.getBounds());
+}).on('addline', function (e) {
+    console.log('linie laden');
+
+
+    const controlElevation = L.control.elevation({
+        detachedView: true,
+        elevationDiv: "#elevation-div",
+    });
+    controlElevation.addTo(karte);
+    controlElevation.addData(e.line);
+
+}).addTo(karte); //plugin starten

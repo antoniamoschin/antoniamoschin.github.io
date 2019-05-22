@@ -6,28 +6,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Adlerweg - Kufstein</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-   
+
+
     <!--Schriftart ändern-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    
+
     <!--LEAFLET-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-   
+
     <!--Fullscreen von Internetseite github leaflet FULLSCREEN-->
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
-    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-    
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
+        rel='stylesheet' />
+
     <!--Kartenauschnitt kann weitergegen werden Src=source, Link zu script -> -->
-    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-hash/0.2.1/leaflet-hash.js'></script>
-    
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet-hash/0.2.1/leaflet-hash.js'></script>
+
     <!--Plugin: Koordinaten Anzeigen-->
-    <link href= "plugins/Control.Coordinates.css" rel="stylesheet">
-    <script src= "plugins/Control.Coordinates.js"></script>
-   
+    <link href="plugins/Control.Coordinates.css" rel="stylesheet">
+    <script src="plugins/Control.Coordinates.js"></script>
+
+    <!--Leaflet GPX einbinden-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
+
+    <!-- D3.js aus Leaflet -->
+    <script src="https://unpkg.com/d3@4.13.0/build/d3.min.js" charset="utf-8"></script>
+
+    <!-- leaflet-elevation -->
+    <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation@latest/leaflet-elevation.css" />
+    <script src="https://unpkg.com/@raruto/leaflet-elevation@latest/leaflet-elevation.js"></script>
+
     <!--Immer ganz unten!-->
     <script src="blicke.js"></script>
 
@@ -66,17 +77,19 @@
 
 
         <h3>Adlerblick</h3>
-        
+
         <figure>
             <figcaption><i class="fas fa-camera"></i> <em>Ausblick von der Aussichtsplattform Adlerblick</em>
             </figcaption>
-            <img src="images\Adlerblick.jpg" alt="Ausblick von der Aussichtsplattform Adlerblick" height="426" width="1024"> <br>
+            <img src="images\Adlerblick.jpg" alt="Ausblick von der Aussichtsplattform Adlerblick" height="426"
+                width="1024"> <br>
 
         </figure>
         <p> <em>Zwischen Hundalm und Buchacker, ganz in der Nähe der Eis- und Tropfsteinhöhle, befindet sich die
-                Aussichtsplattform Adlerhorst. Neben der Besichtigung der Adler-Schnitzwerke eröffnet sich von dort aus durch die exponierte Lage ein grandioses Panorama über das
+                Aussichtsplattform Adlerhorst. Neben der Besichtigung der Adler-Schnitzwerke eröffnet sich von dort aus
+                durch die exponierte Lage ein grandioses Panorama über das
                 Unterinntal und die Kitzbüheler Alpen.</em>
-            
+
         </p>
 
         <h3>Startpunkt: Unterlangkampfen</h3>
@@ -106,7 +119,7 @@
 
             <em>Hinweis: Alternativ kann man die Etappe 4 überspringen, mit dem Bus vom Kufsteiner Bahnhof (Südtiroler
                 Platz) nach Angerberg Franzlerbrücke fahren und von hier aus die Etappe 5 starten.</em>
-                <br><br>
+            <br><br>
             Quelle: <a
                 href="https://www.tirol.at/reisefuehrer/sport/wandern/wandertouren/a-adlerweg-etappe-4-kufstein-alpengasthof-buchacker">Tirol.at</a>
         </p>
@@ -114,43 +127,39 @@
 
 
         <h3>Übersichtskarte</h3>
-        <div 
-        id="map" 
-        data-lat1="47.53" 
-        data-lng1="12.01" 
-        data-title1="Alpengasthof Buchacker"
-        data-lat2="47.58" 
-        data-lng2="12.16" 
-        data-title2="Kufstein">
-            </div>
+        <div id="map" data-lat1="47.53" data-lng1="12.01" data-title1="Alpengasthof Buchacker" data-lat2="47.58"
+            data-lng2="12.16" data-title2="Kufstein">
+        </div>
+        <div id="elevation-div"></div>
 
+        <h3>Links</h3>
+        <ul>
+            <li><a
+                    href="https://www.tirol.at/reisefuehrer/sport/wandern/wandertouren/a-adlerweg-etappe-4-kufstein-alpengasthof-buchacker">Tirol.at
+                    Offizielle Website</a>
+            </li>
+            <li><a
+                    href="https://www.kitzbueheler-alpen.com/de/angerberg/unterkuenfte/details/berghotel-berggasthof/buchackeralm.html">Berggasthof
+                    Buchackeralm</a>
+            </li>
+        </ul>
 
-            <h3>Links</h3>
-            <ul>
-                <li><a
-                        href="https://www.tirol.at/reisefuehrer/sport/wandern/wandertouren/a-adlerweg-etappe-4-kufstein-alpengasthof-buchacker">Tirol.at Offizielle Website</a>
-                </li>
-                <li><a
-                        href="https://www.kitzbueheler-alpen.com/de/angerberg/unterkuenfte/details/berghotel-berggasthof/buchackeralm.html">Berggasthof Buchackeralm</a>
-                </li>
-            </ul>
-           
     </main>
 
     <hr />
 
-<br>
+    <br>
     <footer>
         <nav>
             <a class=back href="https://susannehentschel.github.io/adler/index.html"> <i class="fas fa-arrow-left"> </i>
                 Etappe 3</a>
 
 
-            <a class=next href="https://nadipk.github.io/adler/index.html">Etappe 5 <i
-                    class="fas fa-arrow-right"> </i> </a>
+            <a class=next href="https://nadipk.github.io/adler/index.html">Etappe 5 <i class="fas fa-arrow-right"> </i>
+            </a>
 
         </nav>
-       
+
     </footer>
 
 </body>
