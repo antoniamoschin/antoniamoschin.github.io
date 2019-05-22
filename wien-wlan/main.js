@@ -76,11 +76,10 @@ const url = ' https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&v
 
 //Marker anders gestalten
 function makeMarker(feature, latlng) {
-    const fotoicon = L.icon(
-        {
-            iconUrl: 'http://www.data.wien.gv.at/icons/sehenswuerdigogd.svg',
-            iconSize: [16,16]
-        });
+    const fotoicon = L.icon({
+        iconUrl: 'http://www.data.wien.gv.at/icons/sehenswuerdigogd.svg',
+        iconSize: [16, 16]
+    });
     const sightMarker = L.marker(latlng, {
         icon: fotoicon //Marker ein icon geben sonst normaler blauer Standardmarker
     });
@@ -134,7 +133,7 @@ function linienPopup(feature, layer) {
     const popup = `
     <h3>${feature.properties.NAME}</h3>
     `;
-    layer.bindPopup(popup); 
+    layer.bindPopup(popup);
 }
 
 async function loadWege(wegeUrl) {
@@ -142,7 +141,7 @@ async function loadWege(wegeUrl) {
     const wegeData = await response.json();
     const wegeJson = L.geoJson(wegeData, {
         //Wegenetz grün färben
-        style: function() {
+        style: function () {
             return {
                 color: "green"
             };
@@ -161,12 +160,11 @@ const wlan = 'https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&v
 
 //Marker anders gestalten
 function makewlan(feature, latlng) {
-    const wlanicon = L.icon(
-        {
-            iconUrl: 'http://www.data.wien.gv.at/icons/wlanwienatogd.png',
-            iconSize: [16,16]
-        });
-        
+    const wlanicon = L.icon({
+        iconUrl: 'http://www.data.wien.gv.at/icons/wlanwienatogd.png',
+        iconSize: [16, 16]
+    });
+
 
     const wlanMarker = L.marker(latlng, {
         icon: wlanicon //Marker ein icon geben sonst normaler blauer Standardmarker
@@ -201,3 +199,48 @@ async function loadwlan(wlan) {
 //Laden loadwlan außerhalb der Funktion
 loadwlan(wlan);
 
+
+async function wikipediaArtikelLaden(url) { //Url die in Funktion verwendet wird hat keine Verbidnung mit anderen Urls
+    console.log("Lade", url);
+    const antwort = await fetch(url);
+    const jsonDaten = await antwort.json();
+
+    console.log(jsonDaten);
+    for (let artikel of jsonDaten.geonames) {
+        const wikipediaMarker = L.marker([artikel.lat, artikel.lng], { //geschwungene Klammer für icon)
+            icon: L.icon({
+                iconUrl: "images/wikipediaArtikelLaden.png",
+                iconSize: [22, 22]
+            })
+        }).addTo(karte);
+
+        //Marker einfügen
+        wikipediaMarker.bindPopup(`
+    <h3>${artikel.title}</h3>
+     <hr>
+    <p>${artikel.summary}</p>
+    <footer><a target="_blank" href="https://${artikel.wikipediaUrl}">Weblink</a></footer>
+     `);
+    }
+}
+//Wikipedia Artikel 
+//http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=44.1&south=-9.9&east=-22.4&west=55.2&username=webmapping&style=full
+
+karte.on("click", function () {
+    console.log("Karte geladen", karte.getBounds());
+
+    let ausschnitt = {
+        n: karte.getBounds().getNorth(),
+        s: karte.getBounds().getSouth(),
+        o: karte.getBounds().getEast(),
+        w: karte.getBounds().getWest(),
+    }
+    console.log(ausschnitt);
+    const geonamesUrl = `http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=${ausschnitt.n}&south=${ausschnitt.s}&east=${ausschnitt.o}&west=${ausschnitt.w}&username=webmapping&style=full&maxRows=5`;
+
+    console.log(geonamesUrl);
+
+    //Json Artikel laden
+    wikipediaArtikelLaden(geonamesUrl); //Funktion aufrufen und oben laden
+
+});
