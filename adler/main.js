@@ -147,7 +147,13 @@ new L.GPX("AdlerwegEtappe04.gpx", {
     }
 }).on('loaded', function (e) { //Grenzen werden auf Auschnitt des gesamten Track geladen
     karte.fitBounds(e.target.getBounds());
-}).on('addline', function (e) {
+    const minSpan = document.getElementById('min'); 
+    const maxSpan = document.getElementById('max'); 
+    const diffSpan = document.getElementById('diff'); 
+    minSpan.innerHTML = e.target.get_elevation_min(); 
+    maxSpan.innerHTML = e.target.get_elevation_max(); 
+    diffSpan.innerHTML = Math.round(e.target.get_elevation_gain()); 
+    
     console.log('linie laden');
 
 
