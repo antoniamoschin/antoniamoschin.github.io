@@ -82,48 +82,67 @@ new L.Control.MiniMap(
 
 // die Implementierung der Karte startet hier
 
-let pulldown = document.getElementById ("etappenPulldown")
-for (let i=0; i < ETAPPEN.length; i++){
+let pulldown = document.getElementById("etappenPulldown")
+for (let i = 0; i < ETAPPEN.length; i++) {
     //console.log(ETAPPEN[i]); 
     pulldown.innerHTML += `<option value="${i}">${ETAPPEN[i].titel}</option>`
 }
 //GPX GRuppe erstellen und Menü
-let gpxGruppe = L.featureGroup().addTo(karte); 
-layerControl.addOverlay(gpxGruppe, "GPX-Track"); 
+let gpxGruppe = L.featureGroup().addTo(karte);
+layerControl.addOverlay(gpxGruppe, "GPX-Track");
+
+//Höhenprofil intitalisieren
+let controlElevation = null;
 
 function etappeErzeugen(nummer) {
     let daten = ETAPPEN[nummer];
-   
-    document.getElementById("daten_titel").innerHTML = daten.titel;  //Anzeigen des ausgewählten ELements aus Dropdown Liste
-    document.getElementById("daten_info").innerHTML = daten.info; 
-   
-    
+
+    document.getElementById("daten_titel").innerHTML = daten.titel; //Anzeigen des ausgewählten ELements aus Dropdown Liste
+    document.getElementById("daten_info").innerHTML = daten.info;
+
+
 
     //GPX Track laden
     console.log(daten.gpsid);
-    daten.gpsid =daten.gpsid.replace("A",""); 
-    console.log(daten.gpsid); 
+    daten.gpsid = daten.gpsid.replace("A", "");
+    console.log(daten.gpsid);
 
-    gpxGruppe.clearLayers();        //nur einen Track anzeigen und der der vorher angezeigt wurde wird nicht mehr angezeigt
+    gpxGruppe.clearLayers(); //nur einen Track anzeigen und der der vorher angezeigt wurde wird nicht mehr angezeigt
     const gpxTrack = new L.GPX(`gpx/AdlerwegEtappe${daten.gpsid}.gpx`, {
-        async : true, 
-        marker_options : {
-            startIconUrl : 'icons/pin-icon-start.png', 
-            endIconUrl : 'icons/pin-icon-end.png', 
-            shadowUrl : 'icons/pin-shadow.png',
-            iconSize: [32,37]
+        async: true,
+        marker_options: {
+            startIconUrl: 'icons/pin-icon-start.png',
+            endIconUrl: 'icons/pin-icon-end.png',
+            shadowUrl: 'icons/pin-shadow.png',
+            iconSize: [32, 37]
         }
-    }). addTo(gpxGruppe); 
+    }).addTo(gpxGruppe);
 
-    gpxTrack.on("loaded", function(){
-        karte.fitBounds(gpxTrack.getBounds()); 
-    }); 
+    gpxTrack.on("loaded", function () {
+        karte.fitBounds(gpxTrack.getBounds());
+    });
+    //Höhenprofil zeichnen das sich aktualisiert
+
+    gpxTrack.on("addline", function (evt) {
+        //damit immer nur eine Elevation angezeigt wird/ bestehendes Profil löschen
+        if (controlElevation) {
+            controlElevation.clear();
+            document.getElementById("elevation-div").innerHTML = "";
+        }
+        controlElevation = L.control.elevation({
+            theme: "steelblue-theme",
+            detachedView: true,
+            elevationDiv: "#elevation-div"
+        })
+        controlElevation.addTo(karte);
+        controlElevation.addData(evt.line);
+    })
 }
-etappeErzeugen(0); 
+etappeErzeugen(0);
 
-pulldown.onchange = function(evt){
-    let opts = evt.target.options; 
-    console.log(opts[opts.selectedIndex].value); 
-    console.log(opts[opts.selectedIndex].text); 
+pulldown.onchange = function (evt) {
+    let opts = evt.target.options;
+    console.log(opts[opts.selectedIndex].value);
+    console.log(opts[opts.selectedIndex].text);
     etappeErzeugen(opts[opts.selectedIndex].value);
 }
