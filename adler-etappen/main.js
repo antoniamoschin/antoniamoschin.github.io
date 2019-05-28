@@ -97,9 +97,12 @@ let controlElevation = null;
 function etappeErzeugen(nummer) {
     let daten = ETAPPEN[nummer];
 
+    //Allgemeiner Titel
     document.getElementById("daten_titel").innerHTML = daten.titel; //Anzeigen des ausgewählten ELements aus Dropdown Liste
+    //Kurzinfos
     document.getElementById("daten_info").innerHTML = daten.info;
-
+    //detaillierter Streckenverlauf
+    document.getElementById("daten_strecke").innerHTML = daten.strecke;
 
 
     //GPX Track laden
@@ -119,7 +122,7 @@ function etappeErzeugen(nummer) {
     }).addTo(gpxGruppe);
 
     gpxTrack.on("loaded", function () {
-        karte.fitBounds(gpxTrack.getBounds());
+        // karte.fitBounds(gpxTrack.getBounds());
     });
     //Höhenprofil zeichnen das sich aktualisiert
 
@@ -146,3 +149,21 @@ pulldown.onchange = function (evt) {
     console.log(opts[opts.selectedIndex].text);
     etappeErzeugen(opts[opts.selectedIndex].value);
 }
+//Route berechnen in Karte (auf Karte klick für Start und Ende und dann Route anzeigen lassen)
+const routingMachine = L.Routing.control({}).addTo(karte);
+let start, end;
+karte.on("click", function (ev) {
+
+    console.log("Clicked: ", ev.latlng);
+    if (!start) {
+        start = ev.latlng;
+        alert("Start gesetzt, bitte 2. Punkt für Ende setzen."); 
+    } else {
+        end = ev.latlng;
+        routingMachine.setWaypoints([start, end]);
+        routingMachine.route();
+        start = null;       //Anfangspunkt (erster Click) wird wieder auf Null gesetzt
+    }
+
+    console.log("Start: ", start, "End: ", end);
+})
